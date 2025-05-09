@@ -34,7 +34,9 @@ if (-Not (Test-Path $marker)) {
 
         try {
             Log-Message "Registering RunOnce key for Phase 2"
-            Set-ItemProperty -Path $runOnceKey -Name 'LFSLPhase2' -Value "powershell.exe -ExecutionPolicy Bypass -File `\"$scriptPath`\""
+            $quotedScriptPath = '"' + $scriptPath + '"'
+            $runOnceValue = "powershell.exe -ExecutionPolicy Bypass -File $quotedScriptPath"
+            Set-ItemProperty -Path $runOnceKey -Name 'LFSLPhase2' -Value $runOnceValue
             Log-Message "RunOnce entry set for Phase 2."
         } catch {
             Log-Message "Error during setting RunOnce entry: $_" "ERROR"
@@ -113,9 +115,8 @@ if (-Not (Test-Path $marker)) {
 
         try {
             $adminAccount = "Administrateur"
-            $securePassword = $password
             Log-Message "Setting password for local user '$adminAccount'"
-            Set-LocalUser -Name $adminAccount -Password $securePassword
+            Set-LocalUser -Name $adminAccount -Password $password
             Log-Message "Password for local Administrateur account set successfully."
         } catch {
             Log-Message "Error during setting password for Administrateur account: $_" "ERROR"
