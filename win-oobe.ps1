@@ -35,19 +35,20 @@ if (-Not (Test-Path $marker)) {
             throw
         }
 
-        # Write marker for Phase 2
-        try {
-            $markerContent = "Phase2"
-            $writeMarkerCommand = "$markerContent | Out-File $marker -Encoding ascii"
-            Log-Message "Executing command: $writeMarkerCommand"
-            Invoke-Expression $writeMarkerCommand
-            Log-Message "Phase 2 marker written."
-        }
-        catch {
-            Log-Message "Error during writing marker: $_. Command: $writeMarkerCommand" "ERROR"
-            throw
-        }
+        
+# Write marker for Phase 2
+try {
+    Log-Message "Writing Phase 2 marker to $marker"
+    Set-Content -Path $marker -Value 'Phase2' -Encoding ascii
+    Log-Message "Phase 2 marker written."
+}
+catch {
+    Log-Message "Error during writing marker: $_" "ERROR"
+    throw
+}
 
+
+        
         # Register script to run again on next login
         try {
             $setRunOnceCommand = "Set-ItemProperty -Path $runOnceKey -Name 'LFSLPhase2' -Value 'powershell.exe -ExecutionPolicy Bypass -File `"$scriptPath`"'"
