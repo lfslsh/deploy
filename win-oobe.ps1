@@ -141,6 +141,17 @@ else {
         }
         catch {
             Log-Message "Error during script file removal: $_. Command: $removeScriptCommand" "ERROR"
+         }
+         # Force Group Policy update after domain join
+        try {
+            $gpupdateCommand = "gpupdate /force"
+            Log-Message "Executing command: $gpupdateCommand"
+            Invoke-Expression $gpupdateCommand
+            Log-Message "Group Policy update completed."
+        }
+         catch {
+            Log-Message "Error during gpupdate: $_. Command: $gpupdateCommand" "ERROR"
+            throw
         }
 
         Log-Message "Cleanup completed."
