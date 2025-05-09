@@ -17,6 +17,11 @@ if (-Not (Test-Path $marker)) {
     # Register script to run again on next login
     Set-ItemProperty -Path $runOnceKey -Name "LFSLPhase2" -Value "powershell.exe -ExecutionPolicy Bypass -File `"$scriptPath`""
 
+    Write-Host "Setup Phase 1 completed. Press any key to reboot and continue setup."
+    
+    # Wait for the user to press any key before rebooting
+    $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+
     Write-Host "Rebooting to continue setup..."
     Restart-Computer
     exit
