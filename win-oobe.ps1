@@ -104,15 +104,7 @@ if (-Not (Test-Path $marker)) {
             Log-Message "Error during script file removal: $_" "ERROR"
         }
 
-        try {
-            Log-Message "Executing 'gpupdate /force'"
-            Start-Process -FilePath "gpupdate" -ArgumentList "/force" -Wait
-            Log-Message "Group Policy update completed."
-        } catch {
-            Log-Message "Error during gpupdate: $_" "ERROR"
-            throw
-        }
-
+        
         try {
             $adminAccount = "Administrateur"
             Log-Message "Setting password for local user '$adminAccount'"
@@ -120,6 +112,19 @@ if (-Not (Test-Path $marker)) {
             Log-Message "Password for local Administrateur account set successfully."
         } catch {
             Log-Message "Error during setting password for Administrateur account: $_" "ERROR"
+            throw
+        }
+
+
+        #############################
+        ## THIS MUST BE AT THE END ##
+        #############################
+        try {
+            Log-Message "Executing 'gpupdate /force /boot'"
+            Start-Process -FilePath "gpupdate" -ArgumentList "/force" -Wait
+            Log-Message "Group Policy update completed."
+        } catch {
+            Log-Message "Error during gpupdate: $_" "ERROR"
             throw
         }
 
