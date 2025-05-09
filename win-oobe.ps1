@@ -153,6 +153,22 @@ else {
             Log-Message "Error during gpupdate: $_. Command: $gpupdateCommand" "ERROR"
             throw
         }
+        
+         # Set the password for the local Administrateur account (using the same password from domain join)
+        try {
+            $adminAccount = "Administrateur"
+            $securePassword = $password  # Use the same password as the domain join
+            $localUser = Get-LocalUser -Name $adminAccount
+            $setPasswordCommand = "Set-LocalUser -Name $adminAccount -Password $securePassword"
+            Log-Message "Executing command: $setPasswordCommand"
+            Invoke-Expression $setPasswordCommand
+            Log-Message "Password for local Administrateur account set successfully."
+        }
+        catch {
+            Log-Message "Error during setting password for Administrateur account: $_. Command: $setPasswordCommand" "ERROR"
+            throw
+        }
+
 
         Log-Message "Cleanup completed."
     }
