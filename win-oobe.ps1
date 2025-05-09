@@ -121,7 +121,7 @@ if (-Not (Test-Path $marker)) {
         #############################
         try {
             Log-Message "Executing 'gpupdate /force /boot'"
-            Start-Process -FilePath "gpupdate" -ArgumentList "/force" -Wait
+            Start-Process -FilePath "gpupdate" -ArgumentList "/force", "/boot" -Wait
             Log-Message "Group Policy update completed."
         } catch {
             Log-Message "Error during gpupdate: $_" "ERROR"
