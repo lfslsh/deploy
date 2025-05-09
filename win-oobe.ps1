@@ -115,22 +115,25 @@ if (-Not (Test-Path $marker)) {
             throw
         }
 
+#############################
+## THIS MUST BE AT THE END ##
+#############################
+try {
+    Log-Message "Executing 'gpupdate /force /boot'"
+    
+    # Run gpupdate with /force and /boot in a separate process
+    Start-Process -FilePath "gpupdate" -ArgumentList "/force", "/boot" -Wait
+    
+    Log-Message "Group Policy update completed. Rebooting system..."
+    
+    # Force a reboot after gpupdate completes
+    Restart-Computer -Force
+} catch {
+    Log-Message "Error during gpupdate: $_" "ERROR"
+    throw
+}
 
-        #############################
-        ## THIS MUST BE AT THE END ##
-        #############################
-        try {
-            Log-Message "Executing 'gpupdate /force /boot'"
-            Start-Process -FilePath "gpupdate" -ArgumentList "/force", "/boot" -Wait
-            Log-Message "Group Policy update completed."
-        } catch {
-            Log-Message "Error during gpupdate: $_" "ERROR"
-            throw
-        }
+Log-Message "Cleanup completed."
 
-        Log-Message "Cleanup completed."
-    } catch {
-        Log-Message "Error in Phase 2: $_." "ERROR"
-        throw
-    }
+
 }
