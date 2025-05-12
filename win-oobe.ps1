@@ -133,6 +133,9 @@ if (-Not (Test-Path $marker)) {
             Log-Message "Error during gpupdate: $_" "ERROR"
             throw
         }
+    } catch {
+        Log-Message "Error in Phase 2: $_." "ERROR"
+        throw
     }
 
     Log-Message "Cleanup completed."
