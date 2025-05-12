@@ -104,7 +104,7 @@ if (-Not (Test-Path $marker)) {
             Log-Message "Error during script file removal: $_" "ERROR"
         }
 
-        
+
         try {
             $adminAccount = "Administrateur"
             Log-Message "Setting password for local user '$adminAccount'"
@@ -115,25 +115,27 @@ if (-Not (Test-Path $marker)) {
             throw
         }
 
-#############################
-## THIS MUST BE AT THE END ##
-#############################
-try {
-    Log-Message "Executing 'gpupdate /force /boot'"
-    
-    # Run gpupdate with /force and /boot in a separate process
-    Start-Process -FilePath "gpupdate" -ArgumentList "/force", "/boot" -Wait
-    
-    Log-Message "Group Policy update completed. Rebooting system..."
-    
-    # Force a reboot after gpupdate completes
-    Restart-Computer -Force
-} catch {
-    Log-Message "Error during gpupdate: $_" "ERROR"
-    throw
-}
+        #############################
+        ## THIS MUST BE AT THE END ##
+        #############################
 
-Log-Message "Cleanup completed."
+        try {
+            Log-Message "Executing 'gpupdate /force /boot'"
+
+            # Run gpupdate with /force and /boot in a separate process
+            Start-Process -FilePath "gpupdate" -ArgumentList "/force", "/boot" -Wait
+
+            Log-Message "Group Policy update completed. Rebooting system..."
+
+            # Force a reboot after gpupdate completes
+            Restart-Computer -Force
+        } catch {
+            Log-Message "Error during gpupdate: $_" "ERROR"
+            throw
+        }
+    }
+
+    Log-Message "Cleanup completed."
 
 
 }
