@@ -107,8 +107,14 @@ if (-Not (Test-Path $marker)) {
 
         try {
             $adminAccount = "Administrateur"
+            $adminPassword = Read-Host "Enter the admin password" -AsSecureString
+            Log-Message "Password entered for admin account."
+        } catch {
+            Log-Message "Error during admin password entry: $_." "ERROR"
+            throw
+        }
             Log-Message "Setting password for local user '$adminAccount'"
-            Set-LocalUser -Name $adminAccount -Password $password
+            Set-LocalUser -Name $adminAccount -Password $adminPassword
             Log-Message "Password for local Administrateur account set successfully."
         } catch {
             Log-Message "Error during setting password for Administrateur account: $_" "ERROR"
