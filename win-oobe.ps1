@@ -96,13 +96,13 @@ if (-Not (Test-Path $marker)) {
             Log-Message "Error during RunOnce entry removal: $_" "ERROR"
         }
 
-        try {
-            Log-Message "Removing script file at $scriptPath"
-            Remove-Item $scriptPath -Force -ErrorAction SilentlyContinue
-            Log-Message "Script file removed."
-        } catch {
-            Log-Message "Error during script file removal: $_" "ERROR"
-        }
+        #try {
+            #Log-Message "Removing script file at $scriptPath"
+            #Remove-Item $scriptPath -Force -ErrorAction SilentlyContinue
+            #Log-Message "Script file removed."
+        #} catch {
+            #Log-Message "Error during script file removal: $_" "ERROR"
+        #}
 
 
         try {
