@@ -56,9 +56,11 @@ if (-Not (Test-Path $marker)) {
     }
 } else {
     try {
-        Log-Message "Starting Phase 2: Join domain"
+
+        Log-Message "Starting Phase 2: Join domain, set local admin password"
 
         try {
+            Log-Message "Asking for domain password"
             $password = Read-Host "Enter the domain password" -AsSecureString
             Log-Message "Password entered for domain join."
         } catch {
@@ -66,19 +68,6 @@ if (-Not (Test-Path $marker)) {
             throw
         }
 
-        try {
-            $username = "lfadmin@lfsl.net"
-            $domain = "LFSL.local"
-            $cred = New-Object System.Management.Automation.PSCredential ($username, $password)
-            Log-Message "Joining domain '$domain' with user '$username'"
-            Add-Computer -DomainName $domain -Credential $cred -Restart
-            Log-Message "Computer successfully joined domain '$domain'."
-        } catch {
-            Log-Message "Error during domain join: $_" "ERROR"
-            throw
-        }
-
-        Log-Message "Phase 2 completed."
 
         try {
             Log-Message "Removing Phase 2 marker file"
@@ -96,16 +85,10 @@ if (-Not (Test-Path $marker)) {
             Log-Message "Error during RunOnce entry removal: $_" "ERROR"
         }
 
-        #try {
-            #Log-Message "Removing script file at $scriptPath"
-            #Remove-Item $scriptPath -Force -ErrorAction SilentlyContinue
-            #Log-Message "Script file removed."
-        #} catch {
-            #Log-Message "Error during script file removal: $_" "ERROR"
-        #}
 
 
         try {
+            Log-Message "Asking for admin account password"
             $adminAccount = "Administrateur"
             $adminPassword = Read-Host "Enter the admin password" -AsSecureString
             Log-Message "Password entered for admin account."
@@ -123,24 +106,23 @@ if (-Not (Test-Path $marker)) {
             throw
         }
 
-        #############################
-        ## THIS MUST BE AT THE END ##
-        #############################
+
 
         try {
-            Log-Message "Executing 'gpupdate /force /boot'"
-
-            # Run gpupdate with /force and /boot in a separate process
-            Start-Process -FilePath "gpupdate" -ArgumentList "/force", "/boot" -Wait
-
-            Log-Message "Group Policy update completed. Rebooting system..."
-
-            # Force a reboot after gpupdate completes
-            Restart-Computer -Force
+            $username = "lfadmin@lfsl.net"
+            $domain = "LFSL.local"
+            $cred = New-Object System.Management.Automation.PSCredential ($username, $password)
+            Log-Message "Joining domain '$domain' with user '$username'"
+            Add-Computer -DomainName $domain -Credential $cred -Restart
+            Log-Message "Computer successfully joined domain '$domain'."
         } catch {
-            Log-Message "Error during gpupdate: $_" "ERROR"
+            Log-Message "Error during domain join: $_" "ERROR"
             throw
         }
+
+        Log-Message "Phase 2 completed."
+
+
     } catch {
         Log-Message "Error in Phase 2: $_." "ERROR"
         throw
