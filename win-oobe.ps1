@@ -113,6 +113,8 @@ if (-Not (Test-Path $marker)) {
             Log-Message "Error during admin password entry: $_." "ERROR"
             throw
         }
+
+	try {
             Log-Message "Setting password for local user '$adminAccount'"
             Set-LocalUser -Name $adminAccount -Password $adminPassword
             Log-Message "Password for local Administrateur account set successfully."
