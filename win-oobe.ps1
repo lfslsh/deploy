@@ -113,7 +113,7 @@ if (-Not (Test-Path $marker)) {
             $domain = "LFSL.local"
             $cred = New-Object System.Management.Automation.PSCredential ($username, $password)
             Log-Message "Joining domain '$domain' with user '$username'"
-            Add-Computer -DomainName $domain -Credential $cred -Restart
+            Add-Computer -DomainName $domain -Credential $cred
             Log-Message "Computer successfully joined domain '$domain'."
         } catch {
             Log-Message "Error during domain join: $_" "ERROR"
@@ -129,7 +129,8 @@ if (-Not (Test-Path $marker)) {
     }
 
     Log-Message "Cleanup completed."
-    Start-Sleep -Seconds 5
+    Write-Host "Setup completed. Press any key to reboot and finish setup."
+    $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
     Restart-Computer
 
 
