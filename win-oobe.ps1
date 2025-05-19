@@ -129,6 +129,8 @@ if (-Not (Test-Path $marker)) {
     }
 
     Log-Message "Cleanup completed."
+    Start-Sleep -Seconds 5
+    Restart-Computer
 
 
 }
