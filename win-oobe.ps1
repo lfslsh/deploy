@@ -61,7 +61,7 @@ if (-Not (Test-Path $marker)) {
 
         try {
             Log-Message "Asking for domain password"
-            $password = Read-Host "Enter the domain password" -AsSecureString
+            $passwordPlain = Read-Host "Enter the domain password (password will be visible)"
             Log-Message "Password entered for domain join."
         } catch {
             Log-Message "Error during password entry: $_." "ERROR"
@@ -90,7 +90,7 @@ if (-Not (Test-Path $marker)) {
         try {
             Log-Message "Asking for admin account password"
             $adminAccount = "Administrateur"
-            $adminPassword = Read-Host "Enter the admin password" -AsSecureString
+            $adminPasswordPlain = Read-Host "Enter the admin password (password will be visible)"
             Log-Message "Password entered for admin account."
         } catch {
             Log-Message "Error during admin password entry: $_." "ERROR"
@@ -99,7 +99,8 @@ if (-Not (Test-Path $marker)) {
 
 	try {
             Log-Message "Setting password for local user '$adminAccount'"
-            Set-LocalUser -Name $adminAccount -Password $adminPassword
+            $securePassword = ConvertTo-SecureString $adminPasswordPlain -AsPlainText -Force
+            Set-LocalUser -Name $adminAccount -Password $securePassword
             Log-Message "Password for local Administrateur account set successfully."
         } catch {
             Log-Message "Error during setting password for Administrateur account: $_" "ERROR"
@@ -111,7 +112,8 @@ if (-Not (Test-Path $marker)) {
         try {
             $username = "lfadmin@lfsl.net"
             $domain = "LFSL.local"
-            $cred = New-Object System.Management.Automation.PSCredential ($username, $password)
+            $securePassword = ConvertTo-SecureString $passwordPlain -AsPlainText -Force
+            $cred = New-Object System.Management.Automation.PSCredential ($username, $securePassword)
             Log-Message "Joining domain '$domain' with user '$username'"
             Add-Computer -DomainName $domain -Credential $cred
             Log-Message "Computer successfully joined domain '$domain'."
