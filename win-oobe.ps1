@@ -131,7 +131,7 @@ if (-Not (Test-Path $marker)) {
     }
 
     Log-Message "Cleanup completed."
-    Write-Host "Setup completed. Press any key to reboot and finish setup."
+    Write-Host "Setup completed. Press any key to reboot and finish setup.  >>>> MOVE TO OU NOW TO AVOID REBOOT LATER <<"
     $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
     Restart-Computer
 
